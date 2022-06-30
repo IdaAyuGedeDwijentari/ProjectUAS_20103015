@@ -1,0 +1,576 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
+package aplikasi;
+import javax.swing.table.DefaultTableModel;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+import java.sql.SQLDataException;
+import java.awt.image.BufferedImage;
+import javax.swing.ImageIcon;
+
+/**
+ *
+ * @author asus
+ */
+public class fmMHS extends javax.swing.JFrame {
+    private DefaultTableModel model;
+    static ResultSet rs;
+    static Statement stmt;    
+    dbkoneksi cnn = new dbkoneksi();
+    loadIMG img = new loadIMG();
+    /**
+     * Creates new form fmMHS
+     */
+    public fmMHS() {
+        initComponents();
+        this.initTable();
+        this.getdata();
+        this.jbuttontutup.setEnabled(true);
+        this.navbar(false);
+        this.jbuttonbatal.setVisible(false);
+    }
+    
+    private void initTable(){
+        model = new DefaultTableModel();
+        tMHS.setModel(model);
+        model.addColumn("NIM");
+        model.addColumn("Nama");
+        model.addColumn("Jurusan");
+        model.addColumn("Jenis Kelamin");
+        model.addColumn("Tgl Lahir");
+    }
+    private void getdata(){
+        String sql = "Select NIM, Nama, Jurusan, Jenis_Kelamin,Tgl_Lahir FROM Data_MHS;";
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        try{
+            this.tampildata(sql);
+            while(this.rs.next()){
+                Object[] obj = new Object[5];
+                obj[0] = this.rs.getString("NIM");
+                obj[1] = this.rs.getString("Nama");
+                obj[2] = this.rs.getString("Jurusan");
+                obj[4] = this.rs.getString("Tgl_Lahir");
+                String buttonGroup1 = this.rs.getString("Jenis_Kelamin");
+                if(buttonGroup1.equals("Laki - Laki")){
+                    obj[3] = "Laki-Laki";
+                }else{
+                    obj[3] = "Perempuan";
+                }
+                model.addRow(obj);
+            }
+            stmt.close();
+            cnn.koneksi().close();
+            
+            
+        }catch(Exception e){
+        }         
+           
+        //}
+    }
+    private void tampildata(String sql){
+    try {
+            Statement stmt = cnn.koneksi().createStatement();
+            this.rs = stmt.executeQuery(sql);
+        }catch(Exception e){
+            System.out.println("SALAH");
+        }
+    }
+    private boolean updatedata(String sql){
+    boolean hsl = false;
+        try{
+            Statement stmt = cnn.koneksi().createStatement();
+            stmt.executeUpdate(sql);
+            hsl = true;
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Terjadi kendala pada instruksi SQL");
+        }
+        return hsl;
+    }
+    private void simpandata(){
+        String NIM = this.txtnim.getText();
+        String Nama = this.txtnama.getText();
+        String Jurusan = this.combojurusan.getSelectedItem().toString();
+        String Jenis_Kelamin = "Perempuan";
+        if(this.L.isSelected()){
+        Jenis_Kelamin = "Laki - Laki";
+        }
+        String Tgl_Lahir = this.lbtgllhr.getText();
+        String sql = "INSERT INTO Data_MHS(NIM, Nama, Jurusan, Jenis_Kelamin, Tgl_Lahir) VALUES ('"+NIM+"','"+Nama+"', '"+Jurusan+"', '"+Jenis_Kelamin+"', '"+Tgl_Lahir+"');";
+        if (this.updatedata(sql)){
+            JOptionPane.showMessageDialog(null, "Data berhasil ditambahkan");
+        }
+        this.getdata();
+        this.sbuttonsimpan.setEnabled(false);
+        this.jbuttonbatal.setVisible(false);
+    }
+    private void updatedataform(){
+        String NIM = this.txtnim.getText();
+        String Nama = this.txtnama.getText();
+        String Jurusan = this.combojurusan.getSelectedItem().toString();
+        String Tgl_Lahir = this.lbtgllhr.getText();
+        String Jenis_Kelamin = "Perempuan";
+            if(this.L.isSelected()){
+        Jenis_Kelamin = "Laki - Laki";
+        }
+        String sql = "UPDATE Data_MHS SET NIM= '"+NIM+"', Nama= '"+Nama+"', Jurusan= '"+Jurusan+"', Jenis_Kelamin= '"+Jenis_Kelamin+"', Tgl_Lahir= '"+Tgl_Lahir+"');";
+        if (this.updatedata(sql)){
+            JOptionPane.showMessageDialog(null, "Data Mahasiswa"+Nama+" telah diupdate");
+        }
+        this.getdata();
+        this.sbuttonsimpan.setEnabled(false);
+        this.jbuttonbatal.setVisible(false);
+    }
+    
+    private void navbar(Boolean tf){
+        this.sbuttonsimpan.setEnabled(tf);
+        this.jbuttonupdate.setEnabled(tf);
+        this.jbuttonhapus.setEnabled(tf);
+        this.jbuttontutup.setEnabled(tf);
+    }
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        jFrame1 = new javax.swing.JFrame();
+        jLabel1 = new javax.swing.JLabel();
+        DtBaru = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tMHS = new javax.swing.JTable();
+        lbnim = new javax.swing.JLabel();
+        lbnama = new javax.swing.JLabel();
+        lbjur = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        lbtgllhr = new javax.swing.JLabel();
+        txtnim = new javax.swing.JTextField();
+        txtnama = new javax.swing.JTextField();
+        tgllhr = new javax.swing.JTextField();
+        combojurusan = new javax.swing.JComboBox<>();
+        lbeditdata = new javax.swing.JLabel();
+        L = new javax.swing.JRadioButton();
+        P = new javax.swing.JRadioButton();
+        sbuttonsimpan = new javax.swing.JButton();
+        jbuttonupdate = new javax.swing.JButton();
+        jbuttonhapus = new javax.swing.JButton();
+        jbuttontutup = new javax.swing.JButton();
+        jbuttonbatal = new javax.swing.JButton();
+        imgphoto = new javax.swing.JLabel();
+
+        javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
+        jFrame1.getContentPane().setLayout(jFrame1Layout);
+        jFrame1Layout.setHorizontalGroup(
+            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jFrame1Layout.setVerticalGroup(
+            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setFont(new java.awt.Font("Arial Black", 0, 18)); // NOI18N
+        jLabel1.setText("DATA MAHASISWA");
+        jLabel1.setToolTipText("");
+
+        DtBaru.setText("Data Baru");
+        DtBaru.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DtBaruActionPerformed(evt);
+            }
+        });
+
+        tMHS.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "NIM", "Nama", "Jurusan", "Jenis Kelamin", "Tgl Lahir"
+            }
+        ));
+        tMHS.setName(""); // NOI18N
+        tMHS.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                tMHSAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+                tMHSAncestorRemoved(evt);
+            }
+        });
+        tMHS.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tMHSMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tMHS);
+
+        lbnim.setText("NIM");
+
+        lbnama.setText("Nama");
+
+        lbjur.setText("Jurusan");
+
+        jLabel5.setText("Jenis Kelamin");
+
+        lbtgllhr.setText("Tanggal Lahir");
+
+        combojurusan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "TI - KAB", "TI - DGM", "TI - MTI", "SK" }));
+
+        lbeditdata.setFont(new java.awt.Font("Arial Black", 0, 12)); // NOI18N
+        lbeditdata.setText("EDIT DATA");
+
+        buttonGroup1.add(L);
+        L.setText("Laki - Laki");
+        L.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(P);
+        P.setText("Perempuan");
+
+        sbuttonsimpan.setText("Simpan Data");
+        sbuttonsimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sbuttonsimpanActionPerformed(evt);
+            }
+        });
+
+        jbuttonupdate.setText("Update Data");
+        jbuttonupdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbuttonupdateActionPerformed(evt);
+            }
+        });
+
+        jbuttonhapus.setText("Hapus Data");
+        jbuttonhapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbuttonhapusActionPerformed(evt);
+            }
+        });
+
+        jbuttontutup.setText("Tutup Data Mahasiswa");
+        jbuttontutup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbuttontutupActionPerformed(evt);
+            }
+        });
+
+        jbuttonbatal.setText("Batal");
+        jbuttonbatal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbuttonbatalActionPerformed(evt);
+            }
+        });
+
+        imgphoto.setText("FOTO");
+        imgphoto.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addGap(139, 139, 139)
+                        .addComponent(DtBaru))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(sbuttonsimpan)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jbuttonupdate)
+                        .addGap(18, 18, 18)
+                        .addComponent(jbuttonhapus)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                        .addComponent(jbuttonbatal)
+                        .addGap(18, 18, 18)
+                        .addComponent(jbuttontutup))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(imgphoto, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lbnama)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lbjur)
+                                            .addComponent(lbnim))
+                                        .addGap(22, 22, 22)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(combojurusan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtnama)
+                                            .addComponent(txtnim, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(57, 57, 57)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel5)
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(P)
+                                            .addComponent(L)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lbtgllhr)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(tgllhr, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(lbeditdata))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(DtBaru))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbeditdata)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(imgphoto, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lbnama))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(80, 80, 80)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lbtgllhr)
+                                    .addComponent(tgllhr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel5)
+                                    .addComponent(L))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(P)))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtnim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lbnim))
+                            .addGap(18, 18, 18)
+                            .addComponent(txtnama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(combojurusan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lbjur)))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sbuttonsimpan)
+                    .addComponent(jbuttonupdate)
+                    .addComponent(jbuttonhapus)
+                    .addComponent(jbuttontutup)
+                    .addComponent(jbuttonbatal))
+                .addContainerGap())
+        );
+
+        jLabel1.getAccessibleContext().setAccessibleName("nameMHS");
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void tMHSAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_tMHSAncestorAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tMHSAncestorAdded
+
+    private void tMHSAncestorRemoved(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_tMHSAncestorRemoved
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tMHSAncestorRemoved
+
+    private void LActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_LActionPerformed
+
+    private void jbuttonbatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbuttonbatalActionPerformed
+        this.jbuttontutup.setEnabled(true);
+        this.DtBaru.setEnabled(true);
+        this.sbuttonsimpan.setEnabled(false);
+        this.jbuttonbatal.setVisible(false);
+// TODO add your handling code here:
+    }//GEN-LAST:event_jbuttonbatalActionPerformed
+
+    private void DtBaruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DtBaruActionPerformed
+        this.DtBaru.setEnabled(false);
+        this.jbuttonupdate.setEnabled(false);
+        this.jbuttonhapus.setEnabled(false);
+        this.jbuttontutup.setEnabled(false);
+        this.sbuttonsimpan.setEnabled(true);
+        this.jbuttonbatal.setVisible(true);
+
+        this.txtnim.setText("");
+        this.txtnama.setText("");
+        this.tgllhr.setText("");
+        this.combojurusan.setSelectedIndex(0);
+        this.lbeditdata.setText("Tambah data Mahasiswa");
+    // TODO add your handling code here:
+    }//GEN-LAST:event_DtBaruActionPerformed
+
+    private void tMHSMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tMHSMouseClicked
+    //String urlGambarNull = "src/img/gambar.jpg";
+        this.txtnim.setText( model.getValueAt(tMHS.getSelectedRow(), 0).toString());
+        this.txtnama.setText( model.getValueAt(tMHS.getSelectedRow(), 1).toString());
+        this.combojurusan.setSelectedItem(model.getValueAt(tMHS.getSelectedRow(), 2).toString());
+        this.tgllhr.setText( model.getValueAt(tMHS.getSelectedRow(), 4).toString());
+        String buttonGroup1 = model.getValueAt(tMHS.getSelectedRow(), 3).toString();
+        if(buttonGroup1.equals("Perempuan")){
+            this.P.setSelected(true);
+        }else{
+            this.L.setSelected(true);
+        }
+        /*String urlGambar = "src/img/"+this.txtnim.getText() + ".jpg";
+        BufferedImage loadImg = img.loadImage(urlGambar);
+        if(loadImg == null){
+            loadImg = img.loadImage(urlGambarNull);
+        }
+        ImageIcon imageIcon = new ImageIcon(loadImg);
+        */
+        this.lbeditdata.setText("Edit Data "+this.txtnim.getText());
+        this.sbuttonsimpan.setEnabled(false);
+        this.jbuttonupdate.setEnabled(true);
+        this.jbuttonhapus.setEnabled(true);    
+// TODO add your handling code here:
+    }//GEN-LAST:event_tMHSMouseClicked
+
+    private void jbuttonupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbuttonupdateActionPerformed
+        String NIM = this.txtnim.getText();
+        String Nama = this.txtnama.getText();
+        String Jurusan = this.combojurusan.getSelectedItem().toString();        
+        String Tgl_Lahir = this.tgllhr.getText();
+        String Jenis_Kelamin = "Laki - Laki";
+            if(this.P.isSelected()){
+                Jenis_Kelamin = "Perempuan";
+            }
+        String sqlUpdate = "UPDATE Data_MHS SET Nama='"+Nama+"', JURUSAN='"+Jurusan+"', Jenis_kelamin='"+Jenis_Kelamin+"', Tgl_Lahir='"+Tgl_Lahir+"' WHERE NIM='"+NIM+"';";
+        if(this.updatedata(sqlUpdate)){
+            this.getdata();
+            JOptionPane.showMessageDialog(null, "Data telah di Update");
+        } 
+           // TODO add your handling code here:
+    }//GEN-LAST:event_jbuttonupdateActionPerformed
+
+    private void jbuttonhapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbuttonhapusActionPerformed
+        String NIM = this.txtnim.getText();
+        String Nama = this.txtnama.getText();
+        
+        int opsi = JOptionPane.showConfirmDialog(null,"Yakin akan menghapus data dari "+Nama+"("+NIM+")?","Konfirmasi", JOptionPane.YES_NO_OPTION );
+        if(opsi == JOptionPane.YES_OPTION){
+                String sqlDelete = "DELETE FROM Data_MHS WHERE NIM='"+NIM+"';";
+        if(this.updatedata(sqlDelete)){
+                this.getdata();
+                JOptionPane.showMessageDialog(null, "Data telah dihapus");
+            }
+        }// TODO add your handling code here:
+    }//GEN-LAST:event_jbuttonhapusActionPerformed
+
+    private void sbuttonsimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sbuttonsimpanActionPerformed
+    String NIM = this.txtnim.getText();
+    String Nama = this.txtnama.getText();
+    String Jurusan = this.combojurusan.getSelectedItem().toString();
+    String Tgl_Lahir = this.tgllhr.getText();
+    String Jenis_Kelamin = "Laki - Laki";
+        if(this.P.isSelected()){
+            Jenis_Kelamin = "Perempuan";
+        }
+        String sqlInsert = "INSERT INTO Data_MHS(NIM,Nama,Jurusan,Jenis_Kelamin,Tgl_Lahir) VALUES('"+NIM+"','"+Nama+"','"+Jurusan+"','"+Jenis_Kelamin+"','"+Tgl_Lahir+"');";
+            if(this.updatedata(sqlInsert)){
+                this.getdata();
+            JOptionPane.showMessageDialog(null, "Data telah di Tambahkan");
+        }
+        this.sbuttonsimpan.setEnabled(false);
+        this.jbuttonbatal.setVisible(false);
+        this.jbuttontutup.setEnabled(true);
+        this.DtBaru.setEnabled(true);    // TODO add your handling code here:
+    }//GEN-LAST:event_sbuttonsimpanActionPerformed
+
+    private void jbuttontutupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbuttontutupActionPerformed
+        dispose();        // TODO add your handling code here:
+    }//GEN-LAST:event_jbuttontutupActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(fmMHS.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(fmMHS.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(fmMHS.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(fmMHS.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new fmMHS().setVisible(true);
+            }
+        });
+    }
+
+    boolean isClosed() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton DtBaru;
+    private javax.swing.JRadioButton L;
+    private javax.swing.JRadioButton P;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JComboBox<String> combojurusan;
+    private javax.swing.JLabel imgphoto;
+    private javax.swing.JFrame jFrame1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton jbuttonbatal;
+    private javax.swing.JButton jbuttonhapus;
+    private javax.swing.JButton jbuttontutup;
+    private javax.swing.JButton jbuttonupdate;
+    private javax.swing.JLabel lbeditdata;
+    private javax.swing.JLabel lbjur;
+    private javax.swing.JLabel lbnama;
+    private javax.swing.JLabel lbnim;
+    private javax.swing.JLabel lbtgllhr;
+    private javax.swing.JButton sbuttonsimpan;
+    private javax.swing.JTable tMHS;
+    private javax.swing.JTextField tgllhr;
+    private javax.swing.JTextField txtnama;
+    private javax.swing.JTextField txtnim;
+    // End of variables declaration//GEN-END:variables
+}
